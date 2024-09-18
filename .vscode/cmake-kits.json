@@ -1,0 +1,6 @@
+[
+    {
+        "name": "PSP",
+        "toolchainFile": "${env:PSPDEV}/psp/share/pspdev.cmake"
+    }
+]

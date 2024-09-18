@@ -1,0 +1,71 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "USBHostFS",
+            "type": "shell",
+            "isBackground": true,
+            "command": "usbhostfs_pc",
+            "args": [
+                "-dc"
+            ],
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "__________________"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^USBHostFS \\(c\\) TyRaNiD 2k\\d+$",
+                    "endsPattern": "^Connected to device$"
+                }
+            }
+        },
+        {
+            "label": "PSPSH (Debug PRX)",
+            "type": "shell",
+            "command": "pspsh",
+            "options": {
+                "cwd": "${command:cmake.launchTargetDirectory}"
+            },
+            "args": [
+                "-e",
+                "debug ${command:cmake.launchTargetFilename}.prx"
+            ],
+            "dependsOn": "USBHostFS",
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "__________________"
+                },
+            }
+        },
+        {
+            "label": "PSPSH (Reset)",
+            "type": "shell",
+            "command": "pspsh",
+            "args": [
+                "-e",
+                "reset"
+            ],
+            "dependsOn": "USBHostFS",
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "__________________"
+                },
+            }
+        }
+    ]
+}
