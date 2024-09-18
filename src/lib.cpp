@@ -46,17 +46,16 @@ DummyConfig load_config(const std::string& json) {
 }
 
 std::tuple<double, double> accumulate_vector(const std::vector<double>& values) {
-    double sum = 0.0;
-    for (const auto& value : values) {
-        sum += value;
-    }
-    double mean = sum / values.size();
+    double mean = 0.0;
+    double moment = 0.0;
 
-    double first_moment = 0.0;
     for (const auto& value : values) {
-        first_moment += std::abs(value - mean);
+        mean += value;
+        moment += value * value;
     }
-    first_moment /= values.size();
 
-    return std::make_tuple(mean, first_moment);
+    mean /= values.size();
+    moment /= values.size();
+
+    return {mean, moment};
 }
