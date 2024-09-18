@@ -9,6 +9,7 @@ But this time for PSP and automated with VSCode.
 ### Using VSCode
 
 1. Open project in VSCode.
+    - Select `PSP` CMake toolchain if prompted.
 2. Configure:
     - CMake Tools should autoconfigure the project
         - If not, then open CMake tab and on `Project Status` click on `Delete Cache and Reconfigure` (this is an icon).
