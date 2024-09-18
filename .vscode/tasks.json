@@ -5,7 +5,7 @@
     "tasks": [
         {
             "label": "USBHostFS",
-            "type": "shell",
+            "type": "process",
             "isBackground": true,
             "command": "usbhostfs_pc",
             "args": [
@@ -27,16 +27,12 @@
             }
         },
         {
-            "label": "PSPSH (Debug PRX)",
+            "label": "PSPSH (Prepare Run PRX)",
             "type": "shell",
-            "command": "pspsh",
+            "command": "echo \"./$(realpath -s --relative-to=\"${workspaceFolder}\" \"${command:cmake.launchTargetFilename}.prx\")\" > run.pspsh",
             "options": {
                 "cwd": "${command:cmake.launchTargetDirectory}"
             },
-            "args": [
-                "-e",
-                "debug ${command:cmake.launchTargetFilename}.prx"
-            ],
             "dependsOn": "USBHostFS",
             "runOptions": {
                 "instanceLimit": 1
@@ -45,7 +41,67 @@
                 "owner": "custom",
                 "pattern": {
                     "regexp": "__________________"
-                },
+                }
+            }
+        },
+        {
+            "label": "PSPSH (Run PRX)",
+            "type": "process",
+            "command": "pspsh",
+            "options": {
+                "cwd": "${command:cmake.launchTargetDirectory}"
+            },
+            "args": [
+                "./run.pspsh"
+            ],
+            "dependsOn": "PSPSH (Prepare Run PRX)",
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "__________________"
+                }
+            }
+        },
+        {
+            "label": "PSPSH (Prepare Debug PRX)",
+            "type": "shell",
+            "command": "echo \"debug ./$(realpath -s --relative-to=\"${workspaceFolder}\" \"${command:cmake.launchTargetFilename}.prx\")\" > debug.pspsh",
+            "options": {
+                "cwd": "${command:cmake.launchTargetDirectory}"
+            },
+            "dependsOn": "USBHostFS",
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "__________________"
+                }
+            }
+        },
+        {
+            "label": "PSPSH (Debug PRX)",
+            "type": "process",
+            "command": "pspsh",
+            "options": {
+                "cwd": "${command:cmake.launchTargetDirectory}"
+            },
+            "args": [
+                "./debug.pspsh"
+            ],
+            "dependsOn": "PSPSH (Prepare Debug PRX)",
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "__________________"
+                }
             }
         },
         {
@@ -64,7 +120,7 @@
                 "owner": "custom",
                 "pattern": {
                     "regexp": "__________________"
-                },
+                }
             }
         }
     ]
