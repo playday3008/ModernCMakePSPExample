@@ -2,6 +2,12 @@
 
 But this time for PSP and automated with VSCode.
 
+## TODO
+
+- [ ] Automate tests execution directly on PSP.
+- [ ] Shift running and debugging from VSCode to CMake.
+- [ ] Use PSPSDK libraries for more relatable examples.
+
 ## Build and debug on PSP
 
 > Psst! Check [dependencies](#references) first.
