@@ -1,6 +1,11 @@
 #pragma once
 
+#include <array>
+#include <mutex>
 #include <sstream>
+
+#include <cstdint>
+#include <cstddef>
 
 /**
  * @brief String buffer which writes both to stdout and the PSP Debug Screen
@@ -28,6 +33,7 @@
 class psp_streambuf : public std::stringbuf {
   protected:
     static psp_streambuf* _instance;
+    static std::mutex     _mutex;
 
     psp_streambuf() : std::stringbuf() {
         pspDebugScreenInit();
@@ -109,12 +115,7 @@ class psp_streambuf : public std::stringbuf {
     psp_streambuf& operator=(psp_streambuf&&) noexcept = delete;
     ~psp_streambuf() override { pspDebugScreenClear(); }
 
-    static psp_streambuf* get_instance() {
-        if (!_instance) {
-            _instance = new psp_streambuf();
-        }
-        return _instance;
-    }
+    static psp_streambuf* get_instance();
 
     int sync() override;
 };

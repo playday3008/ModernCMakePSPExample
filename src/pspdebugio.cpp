@@ -1,14 +1,13 @@
-#include <array>
 #include <charconv>
-#include <iostream>
 #include <iomanip>
+#include <mutex>
+#include <ranges>
 #include <sstream>
+#include <string>
 #include <string_view>
 #include <system_error>
-#include <ranges>
 #include <vector>
 
-#include <cstdio>
 #include <cstddef>
 #include <cstdint>
 
@@ -19,6 +18,15 @@
 #include <modern/pspdebugio.hpp>
 
 psp_streambuf* psp_streambuf::_instance = nullptr;
+std::mutex     psp_streambuf::_mutex;
+
+psp_streambuf* psp_streambuf::get_instance() {
+    std::lock_guard lock(_mutex);
+    if (!_instance) {
+        _instance = new psp_streambuf();
+    }
+    return _instance;
+}
 
 int psp_streambuf::sync() {
     int ret = std::stringbuf::sync();

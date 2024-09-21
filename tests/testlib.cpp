@@ -1,10 +1,6 @@
 #include <modern/lib.hpp>
 
-#include <catch2/catch_session.hpp>
-#include <catch2/internal/catch_compiler_capabilities.hpp>
-#include <catch2/internal/catch_config_wchar.hpp>
-#include <catch2/internal/catch_leak_detector.hpp>
-#include <catch2/internal/catch_platform.hpp>
+#include <sstream>
 
 #include <pspkernel.h>
 #include <pspdebug.h>
@@ -27,9 +23,11 @@ namespace Catch {
 
 #endif  // CATCH_CONFIG_NOSTDOUT
 
-PSP_MODULE_INFO("testlib", PSP_MODULE_USER, 1, 0);
-
-PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER);
+#include <catch2/catch_session.hpp>
+#include <catch2/internal/catch_compiler_capabilities.hpp>
+#include <catch2/internal/catch_config_wchar.hpp>
+#include <catch2/internal/catch_leak_detector.hpp>
+#include <catch2/internal/catch_platform.hpp>
 
 namespace Catch {
     CATCH_INTERNAL_START_WARNINGS_SUPPRESSION
@@ -37,6 +35,10 @@ namespace Catch {
     static LeakDetector leakDetector;
     CATCH_INTERNAL_STOP_WARNINGS_SUPPRESSION
 }  // namespace Catch
+
+PSP_MODULE_INFO("testlib", PSP_MODULE_USER, 1, 0);
+
+PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER);
 
 int exit_callback([[maybe_unused]] int   arg1,
                   [[maybe_unused]] int   arg2,
