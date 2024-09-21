@@ -49,7 +49,7 @@ class psp_streambuf : public std::stringbuf {
      *
      * @note Alpha is unused and set to 0xFF
      */
-    static constexpr std::array<uint32_t, 1 << 4> COLORS_4BIT = {
+    static constexpr const std::array<uint32_t, 1 << 4> COLORS_4BIT = {
       0xff000000,  // Black
       0xff000080,  // Red
       0xff008000,  // Green
@@ -73,7 +73,7 @@ class psp_streambuf : public std::stringbuf {
      *
      * @note Alpha is unused and set to 0xFF
      */
-    static constexpr std::array<uint32_t, 1 << 8> COLORS_8BIT = []() consteval -> auto {
+    static constexpr const std::array<uint32_t, 1 << 8> COLORS_8BIT = []() consteval -> auto {
         std::array<uint32_t, 1 << 8> colors;
         // First 16 colors are the same as 4-bit colors
         for (uint32_t i = 0; i < 16; i++) {

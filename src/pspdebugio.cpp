@@ -48,14 +48,15 @@ int psp_streambuf::sync() {
         if (input[i] == '\033' && i + 1 < input.length() && input[i + 1] == '[') {
             // Print any pending text before the escape sequence
             if (i > lastPrintedIndex) {
-                pspDebugScreenPrintData(input.data() + lastPrintedIndex, i - lastPrintedIndex);
+                pspDebugScreenPrintData(input.c_str() + lastPrintedIndex, i - lastPrintedIndex);
             }
 
             // Find the end of the escape sequence
             size_t end = input.find('m', i + 2);
             if (end != std::string_view::npos) {
                 // Extract the escape sequence
-                std::string_view escapeSequence = input.substr(i + 2, end - (i + 2));
+                std::string_view escapeSequence =
+                    std::string_view(input).substr(i + 2, end - (i + 2));
                 if (escapeSequence.empty()) {
                     // Empty escape sequence, treat it as "0"
                     escapeSequence = "0";
@@ -81,12 +82,13 @@ int psp_streambuf::sync() {
                             // Some error occurred while parsing the escape sequence
                             return code;
                         case 0:
-                            setTextColor(DEFAULT_TEXT_COLOR);
-                            setBackColor(DEFAULT_BACK_COLOR);
                             [[fallthrough]];
                         case 27:  // NOT Inverted
                             setTextColor = pspDebugScreenSetTextColor;
                             setBackColor = pspDebugScreenSetBackColor;
+                            if (code != 0) break;
+                            setTextColor(DEFAULT_TEXT_COLOR);
+                            setBackColor(DEFAULT_BACK_COLOR);
                             break;
 
                         case 7:  // Inverted
@@ -164,7 +166,7 @@ int psp_streambuf::sync() {
                 lastPrintedIndex = i;
             } else {
                 // Invalid escape sequence, print it as-is
-                pspDebugScreenPrintData(input.data() + i, 2);
+                pspDebugScreenPrintData(input.c_str() + i, 2);
                 i               += 2;
                 lastPrintedIndex = i;
             }
@@ -175,10 +177,14 @@ int psp_streambuf::sync() {
 
     // Print any remaining text after the last escape sequence
     if (lastPrintedIndex < input.length()) {
-        pspDebugScreenPrintData(input.data() + lastPrintedIndex, input.length() - lastPrintedIndex);
+        pspDebugScreenPrintData(input.c_str() + lastPrintedIndex,
+                                input.length() - lastPrintedIndex);
     }
     sceDisplayWaitVblankStart();
-    pspDebugScreenSetXY(0, 0);
+    // pspDebugScreenSetXY(0, 0);
+
+    // Reset the buffer to avoid printing it multiple times
+    str("");
 
     return ret;
 }
@@ -187,7 +193,7 @@ void test_table(const char* title, const char* mode) {
     static std::ostream cout(psp_streambuf::get_instance());
 
     int front, back;
-    cout << "\n\033[1m" << title << "\033[m\n bg  fg\n";
+    cout << "\033[1m" << title << "\033[m\n bg  fg\n";
     for (back = 40; back <= 107; back++) {
         if (back == 48) back = 100;
         cout << std::setw(3) << back << " \033[" << mode << back << "m";
@@ -203,7 +209,7 @@ void test_table_rich(const char* title, const char* mode) {
     static std::ostream cout(psp_streambuf::get_instance());
 
     int back;
-    cout << "\n\033[1m" << title << "\033[m\n";
+    cout << "\033[1m" << title << "\033[m\n";
 
     for (back = 0; back < 16; back++) {
         cout << "\033[" << mode << "48;5;" << back << "m" << std::setw(4) << back << "\033[m";

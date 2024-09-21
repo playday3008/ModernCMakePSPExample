@@ -73,6 +73,7 @@ int main(int argc, char** argv) {
 
     // test_table("4-bit color", "0;");
     // test_table("4-bit color (inverted), "7;");
+    // Catch::cout() << "\033[7;1;2;3;4;6;9;38;2;123;0;123myo\033[m\n";
     // test_table_rich("8-bit color", "0;");
 
     int ret = Catch::Session().run(argc, argv);
