@@ -27,6 +27,9 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   set(CMAKE_C_EXTENSIONS OFF)
   set(CMAKE_CXX_EXTENSIONS OFF)
 
+  # Be pedantic
+  add_compile_options(-Wall -Wextra -Wpedantic)
+
   # Let's nicely support folders in IDEs
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
